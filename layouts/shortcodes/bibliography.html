@@ -92,7 +92,14 @@
   {{- $bibliographyPath = $constructedBibResource }}
   {{- end }}
 
-  {{- $references = getJSON $bibliographyPath }}
+  {{ with resources.Get $bibliographyPath }}
+  {{ with . | transform.Unmarshal }}
+    {{ $references = . }}
+  {{ end }}
+  {{ else }}
+    {{ errorf "Unable to get global resource %q" $bibliographyPath }}
+  {{ end }}
+
 
 {{- end }}
 
